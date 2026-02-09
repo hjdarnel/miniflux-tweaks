@@ -13,8 +13,8 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @icon         https://raw.githubusercontent.com/miniflux/logo/master/original/icon-128.png
-// @downloadURL  https://raw.githubusercontent.com/hdarnell/miniflux-tweaks/main/miniflux-tweaks.user.js
-// @updateURL    https://raw.githubusercontent.com/hdarnell/miniflux-tweaks/main/miniflux-tweaks.user.js
+// @downloadURL  https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js
+// @updateURL    https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js
 // ==/UserScript==
 
 (function () {
