@@ -21,7 +21,7 @@ Adds a dropdown to feed pages that lets you switch between "Newest first" and "O
 ### Install Steps
 
 1. Install Tampermonkey or Violentmonkey in your browser
-2. Click here to install: [miniflux-tweaks.user.js](https://raw.githubusercontent.com/hdarnell/miniflux-tweaks/main/miniflux-tweaks.user.js)
+2. Click here to install: [miniflux-tweaks.user.js](https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js)
 3. Navigate to your Miniflux instance
 4. Click "OK" when prompted to configure the script for this domain
 5. Go to **Settings** and scroll to the bottom
