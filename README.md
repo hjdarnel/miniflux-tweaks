@@ -2,6 +2,7 @@
 
 A userscript to add quality-of-life improvements to self-hosted [Miniflux](https://miniflux.app/) feed reader interfaces.
 
+
 ## Features
 
 ### Quick Sort Toggle
@@ -13,6 +14,8 @@ Adds a dropdown to feed pages that lets you switch between "Newest first" and "O
 - No external dependencies
 
 ## Installation
+
+[![Install Button](https://img.shields.io/badge/Install-Click%20Here-green?style=for-the-badge&logo=DocuSign)](https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js)
 
 ### Prerequisites
 - A userscript manager: [Tampermonkey](https://www.tampermonkey.net/) or [Violentmonkey](https://violentmonkey.github.io/)
