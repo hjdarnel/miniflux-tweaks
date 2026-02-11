@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Miniflux Tweaks
 // @namespace    https://github.com/hjdarnel/miniflux-tweaks
-// @version      1.0.1
+// @version      1.0.2
 // @description  Utilities for Miniflux feed reader, including toggleable sort direction on list views.
 // @match        *://*/unread*
 // @match        *://*/settings
@@ -230,7 +230,6 @@
 
     const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
 
-    // Create dropdown
     const select = el(
       'select',
       {
@@ -261,6 +260,10 @@
       select.title = 'Failed to fetch user settings - check API token';
       return;
     }
+
+    // Settings configured correctly - make dropdown black
+    select.style.color = '#000';
+    select.style.removeProperty('border');
 
     // Set current value
     select.value = user.entry_sorting_direction || 'desc';
