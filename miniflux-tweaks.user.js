@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Miniflux Tweaks
-// @namespace    https://github.com/hdarnell/miniflux-tweaks
-// @version      1.0.0
+// @namespace    https://github.com/hjdarnel/miniflux-tweaks
+// @version      1.0.1
 // @description  Utilities for Miniflux feed reader, including toggleable sort direction on list views.
 // @match        *://*/unread*
 // @match        *://*/settings
@@ -9,9 +9,7 @@
 // @match        *://*/history*
 // @match        *://*/feed/*/entries*
 // @match        *://*/category/*/entries*
-// @grant        GM_getValue
-// @grant        GM_setValue
-// @grant        GM_deleteValue
+// @grant        none
 // @icon         https://raw.githubusercontent.com/miniflux/logo/master/original/icon-128.png
 // @downloadURL  https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js
 // @updateURL    https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js
@@ -21,14 +19,14 @@
   'use strict';
 
   // --- Constants ---
-  const STORAGE = {
-    domain: 'minifluxDomain',
-    token: 'apiToken'
+  const STORAGE_KEYS = {
+    domain: 'minifluxTweaks.domain',
+    token: 'minifluxTweaks.apiToken'
   };
 
   // --- Domain Check ---
   function checkDomain() {
-    const savedDomain = GM_getValue(STORAGE.domain, '');
+    const savedDomain = localStorage.getItem(STORAGE_KEYS.domain) ?? '';
 
     if (!savedDomain) {
       if (
@@ -36,7 +34,7 @@
           'Configure Miniflux Tweaks?\n\nClick OK if this is your Miniflux instance.'
         )
       ) {
-        GM_setValue(STORAGE.domain, location.origin);
+        localStorage.setItem(STORAGE_KEYS.domain, location.origin);
         location.reload();
       }
       return false;
@@ -51,7 +49,7 @@
 
   // --- API Helpers ---
   function getHeaders() {
-    const token = GM_getValue(STORAGE.token, '');
+    const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
     return {
       'X-Auth-Token': token,
       'Content-Type': 'application/json'
@@ -59,7 +57,7 @@
   }
 
   async function getMe() {
-    const token = GM_getValue(STORAGE.token, '');
+    const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
     if (!token) return null;
 
     try {
@@ -123,8 +121,8 @@
     const form = document.querySelector('main form');
     if (!form) return;
 
-    const savedToken = GM_getValue(STORAGE.token, '');
-    const savedDomain = GM_getValue(STORAGE.domain, '');
+    const savedToken = localStorage.getItem(STORAGE_KEYS.token) ?? '';
+    const savedDomain = localStorage.getItem(STORAGE_KEYS.domain) ?? '';
 
     const statusSpan = el('span', {
       id: 'mft-save-status',
@@ -146,7 +144,7 @@
         id: 'mft-save-token',
         className: 'button button-primary',
         onClick: () => {
-          GM_setValue(STORAGE.token, tokenInput.value);
+          localStorage.setItem(STORAGE_KEYS.token, tokenInput.value);
           statusSpan.textContent = 'Saved!';
           statusSpan.style.color = 'green';
           setTimeout(() => {
@@ -169,7 +167,7 @@
               'Reset domain configuration?\n\nYou will be prompted to reconfigure on next page load.'
             )
           ) {
-            GM_deleteValue(STORAGE.domain);
+            localStorage.removeItem(STORAGE_KEYS.domain);
             location.reload();
           }
         }
@@ -230,7 +228,7 @@
     const paginationNext = document.querySelector('.pagination-next');
     if (!paginationNext) return;
 
-    const token = GM_getValue(STORAGE.token, '');
+    const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
 
     // Create dropdown
     const select = el(
