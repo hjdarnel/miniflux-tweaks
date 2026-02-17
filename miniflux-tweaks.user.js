@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Miniflux Tweaks
 // @namespace    https://github.com/hjdarnel/miniflux-tweaks
-// @version      1.0.2
+// @version      1.0.3
 // @description  Utilities for Miniflux feed reader, including toggleable sort direction on list views.
 // @match        *://*/unread*
 // @match        *://*/settings
@@ -9,7 +9,9 @@
 // @match        *://*/history*
 // @match        *://*/feed/*/entries*
 // @match        *://*/category/*/entries*
-// @grant        none
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @grant        GM_deleteValue
 // @icon         https://raw.githubusercontent.com/miniflux/logo/master/original/icon-128.png
 // @downloadURL  https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js
 // @updateURL    https://raw.githubusercontent.com/hjdarnel/miniflux-tweaks/main/miniflux-tweaks.user.js
@@ -20,13 +22,26 @@
 
   // --- Constants ---
   const STORAGE_KEYS = {
-    domain: 'minifluxTweaks.domain',
-    token: 'minifluxTweaks.apiToken'
+    domain: 'domain',
+    token: 'apiToken'
   };
+
+  // --- Storage Helpers (GM_ APIs for cross-origin persistence) ---
+  function getStoredValue(key, defaultValue = '') {
+    return GM_getValue(STORAGE_KEYS[key] ?? key, defaultValue);
+  }
+
+  function setStoredValue(key, value) {
+    GM_setValue(STORAGE_KEYS[key] ?? key, value);
+  }
+
+  function deleteStoredValue(key) {
+    GM_deleteValue(STORAGE_KEYS[key] ?? key);
+  }
 
   // --- Domain Check ---
   function checkDomain() {
-    const savedDomain = localStorage.getItem(STORAGE_KEYS.domain) ?? '';
+    const savedDomain = getStoredValue('domain');
 
     if (!savedDomain) {
       if (
@@ -34,7 +49,7 @@
           'Configure Miniflux Tweaks?\n\nClick OK if this is your Miniflux instance.'
         )
       ) {
-        localStorage.setItem(STORAGE_KEYS.domain, location.origin);
+        setStoredValue('domain', location.origin);
         location.reload();
       }
       return false;
@@ -49,7 +64,7 @@
 
   // --- API Helpers ---
   function getHeaders() {
-    const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
+    const token = getStoredValue('token');
     return {
       'X-Auth-Token': token,
       'Content-Type': 'application/json'
@@ -57,7 +72,7 @@
   }
 
   async function getMe() {
-    const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
+    const token = getStoredValue('token');
     if (!token) return null;
 
     try {
@@ -121,8 +136,8 @@
     const form = document.querySelector('main form');
     if (!form) return;
 
-    const savedToken = localStorage.getItem(STORAGE_KEYS.token) ?? '';
-    const savedDomain = localStorage.getItem(STORAGE_KEYS.domain) ?? '';
+    const savedToken = getStoredValue('token');
+    const savedDomain = getStoredValue('domain');
 
     const statusSpan = el('span', {
       id: 'mft-save-status',
@@ -144,7 +159,7 @@
         id: 'mft-save-token',
         className: 'button button-primary',
         onClick: () => {
-          localStorage.setItem(STORAGE_KEYS.token, tokenInput.value);
+          setStoredValue('token', tokenInput.value);
           statusSpan.textContent = 'Saved!';
           statusSpan.style.color = 'green';
           setTimeout(() => {
@@ -167,7 +182,7 @@
               'Reset domain configuration?\n\nYou will be prompted to reconfigure on next page load.'
             )
           ) {
-            localStorage.removeItem(STORAGE_KEYS.domain);
+            deleteStoredValue('domain');
             location.reload();
           }
         }
@@ -228,7 +243,7 @@
     const paginationNext = document.querySelector('.pagination-next');
     if (!paginationNext) return;
 
-    const token = localStorage.getItem(STORAGE_KEYS.token) ?? '';
+    const token = getStoredValue('token');
 
     const select = el(
       'select',
